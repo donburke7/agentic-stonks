@@ -132,4 +132,3 @@ cython_debug/
 .idea
 
 marketscraper/logs
-db

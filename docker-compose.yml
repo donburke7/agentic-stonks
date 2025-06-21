@@ -1,24 +1,32 @@
-version: "3.9"
 
 services:
-  db:
+  postgres:
     image: postgres:16
     container_name: marketrisk_postgres
     restart: unless-stopped
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-marketrisk}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-marketrisk}
-      POSTGRES_DB: ${POSTGRES_DB:-marketrisk}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-    #healthcheck:
-      #test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
-    #  interval: 10s
-    #  timeout: 5s
-    #  retries: 5
+
+  qdrant:
+    image: qdrant/qdrant
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   pgdata:
+  qdrant_data:

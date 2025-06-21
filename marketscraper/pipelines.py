@@ -1,13 +1,9 @@
 import os, psycopg2, psycopg2.extras
+from db.utils import get_db_connection
 
 class PostgresPipeline:
     def open_spider(self, spider):
-        self.conn = psycopg2.connect(
-            host=os.getenv("POSTGRES_HOST", "localhost"),
-            dbname=os.getenv("POSTGRES_DB",  "marketrisk"),
-            user=os.getenv("POSTGRES_USER", "marketrisk"),
-            password=os.getenv("POSTGRES_PASSWORD", "marketrisk"),
-        )
+        self.conn = get_db_connection()
         self.cur = self.conn.cursor()
 
     def close_spider(self, spider):
