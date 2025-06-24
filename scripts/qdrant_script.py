@@ -5,11 +5,11 @@ from qdrant_client.http.models import VectorParams, models
 
 
 class QdrantWorker:
-    def __init__(self):
+    def __init__(self, collection_name):
         self.pg_conn = get_db_connection()
         self.pg_cur = self.pg_conn.cursor()
         self.qdrant_client = QdrantClient(url=os.environ["QDRANT_URL"])
-        self.collection_name = "sec_articles"
+        self.collection_name = collection_name
 
     def create_collection(self):
         """
@@ -33,7 +33,7 @@ class QdrantWorker:
     def reset_collection(self):
         """
         Resets the specified collection in the Qdrant database by deleting it if it exists and recreating it
-        with a new configuration.
+        with the same configuration.
 
         :param self: An instance of the class that manages the Qdrant client and collection.
         :raises Exception: If there is an issue during the deletion or creation process of the collection.
